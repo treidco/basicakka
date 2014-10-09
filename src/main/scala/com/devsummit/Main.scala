@@ -2,10 +2,6 @@ package com.devsummit
 
 import akka.actor.{ActorSystem, Props}
 
-/**
- * User: timreid
- * Date: 06/10/14
- */
 object Main extends App {
 
   sealed trait Message
