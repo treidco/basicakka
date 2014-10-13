@@ -9,7 +9,7 @@ class Ping(p: ActorRef) extends Actor {
     case pingpong: PingPong => {
       val count = pingpong.count
       println("Ping: " + count)
-      if(count < 1000) sender ! PingPong(pingpong.count + 1) else context.parent ! End
+      if(count < 10) sender ! PingPong(pingpong.count + 1) else context.parent ! End
     }
   }
 }
