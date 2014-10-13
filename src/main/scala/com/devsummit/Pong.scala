@@ -41,7 +41,7 @@ class Pong extends Actor {
     val state = Await.result(future, timeout.duration).asInstanceOf[PongState]
     pongState = Some(state)
 
-    println("received state: " + state)
+    println("Received state: " + state)
     state.sender ! PingPong(state.count + 1)
   }
 

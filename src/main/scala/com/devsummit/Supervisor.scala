@@ -11,8 +11,6 @@ class Supervisor extends Actor {
 
   var pongState: Option[PongState] = None
 
-//  context.watch(pong)
-
   override def receive: Receive = {
     case End => context.system.shutdown()
     case Start => ping ! Start(1)
