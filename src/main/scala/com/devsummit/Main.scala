@@ -1,6 +1,7 @@
 package com.devsummit
 
-import akka.actor.{ActorRef, ActorSystem, Props}
+import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import com.devsummit.Protocol.Start
 
 class RandomException(msg: String) extends Exception(msg)
 
@@ -23,11 +24,23 @@ object Protocol {
 
 object Main extends App {
 
-  import com.devsummit.Protocol._
-
   val system = ActorSystem("DevSummit")
   val supervisor = system.actorOf(Props[Supervisor], "supervisor")
 
-  supervisor ! Start
+  //  supervisor ! Start
 
+  val local = system.actorOf(Props[LocalActor], "local")
+  local ! Start
+
+}
+
+class LocalActor extends Actor {
+
+  val remote = context.actorSelection("akka.tcp://RemoteAkka@127.0.0.1:2552/user/echo")
+
+  override def receive: Receive = {
+    case Start => remote ! "Hello World"
+    case msg => println("Recieved echoed message: " + msg)
+
+  }
 }
