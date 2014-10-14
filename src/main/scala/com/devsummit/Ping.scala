@@ -1,11 +1,14 @@
 package com.devsummit
 
 import akka.actor.{Actor, ActorRef}
-import com.devsummit.Main.{End, PingPong, Start}
+import com.devsummit.Protocol._
 
-class Ping(p: ActorRef) extends Actor {
+class Ping extends Actor {
+
+  val pong = context.actorSelection("../pong")
+
   override def receive: Receive = {
-    case starter: Start => p ! PingPong(starter.count)
+    case starter: Start => pong ! PingPong(starter.count)
     case pingpong: PingPong => {
       val count = pingpong.count
       println("Ping: " + count)

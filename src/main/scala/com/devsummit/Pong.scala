@@ -3,13 +3,12 @@ package com.devsummit
 import akka.actor.Actor
 import akka.pattern.ask
 import akka.util.Timeout
-import com.devsummit.Main.{PingPong, PongState, RequestState}
+import com.devsummit.Protocol._
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
 import scala.util.Random
 
-class RandomException(msg: String) extends Exception(msg)
 
 class Pong extends Actor {
 
@@ -21,8 +20,7 @@ class Pong extends Actor {
       println("Pong: " + pingpong.count)
 
       val currentState = PongState(pingpong.count, sender())
-      pongState = Some(currentState)
-      context.parent ! currentState
+      persistState(currentState)
 
       if (!restarted && Random.nextBoolean())
         throw new RandomException("Bang")
@@ -43,6 +41,11 @@ class Pong extends Actor {
 
     println("Received state: " + state)
     state.sender ! PingPong(state.count + 1)
+  }
+
+  private def persistState(state: PongState) {
+    pongState = Some(state)
+    context.parent ! state
   }
 
 }
